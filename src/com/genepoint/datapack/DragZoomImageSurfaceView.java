@@ -1,6 +1,11 @@
 package com.genepoint.datapack;
 
 
+import java.util.List;
+
+import com.genepoint.blelocate.BeaconLocation;
+import com.genepoint.blelocate.G;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,12 +13,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -62,6 +65,8 @@ public class DragZoomImageSurfaceView extends SurfaceView implements SurfaceHold
 
 	private PointF myPosition = new PointF(-1.0f, -1.0f);
 
+	private List<BeaconLocation> beaconsList = null;
+	
 	public DragZoomImageSurfaceView(Context context) {
 		super(context);
 		init();
@@ -204,7 +209,7 @@ public class DragZoomImageSurfaceView extends SurfaceView implements SurfaceHold
 	}
 
 	/**
-	 * ����ǰλ�ã��ƶ���SurfaceView���м�
+	 * 将当前位置，移动到SurfaceView的中间
 	 */
 	public void movePositionToCenter() {
 		if (mapBitmap == null)
@@ -230,7 +235,7 @@ public class DragZoomImageSurfaceView extends SurfaceView implements SurfaceHold
 	}
 	
 	/**
-	 * ���Surface�ϵ�ͼ�㣬�����ͼ
+	 * 清楚Surface上的图层，保存地图
 	 */
 	public void clearLayer() {
 		if (posBitmap != null) {
@@ -242,15 +247,24 @@ public class DragZoomImageSurfaceView extends SurfaceView implements SurfaceHold
 	}
 
 	/**
-	 * �ڵ�ͼ�������ϻ���λ�õ�
+	 * 在底图的坐标上绘制位置点
 	 */
 	public void drawPosition(double pos_x, double pos_y) {
 		myPosition.set((float) pos_x, (float) pos_y);
 		drawSurfaceView();
 	}
+	
+	/**
+     * 在底图的坐标上绘制位置点和周围的beacons
+     */
+    public void drawPositonWithBeacons(double pos_x, double pos_y, List<BeaconLocation> pts) {
+        this.beaconsList = pts;
+        drawPosition(pos_x, pos_y);
+        this.beaconsList = null;
+    }
 
 	/**
-	 * ��ʼ����SurfaceView
+	 * 开始绘制SurfaceView
 	 */
 	public void drawSurfaceView() {
 		
@@ -297,6 +311,33 @@ public class DragZoomImageSurfaceView extends SurfaceView implements SurfaceHold
 								matrix.postTranslate(tmpx, tmpy);
 								mCanvas.drawBitmap(posBitmap, matrix, paint);
 								
+								//绘制beacons位置
+		                        Paint paint1 = new Paint();
+		                        paint1.setColor(Color.RED);
+		                        paint1.setAntiAlias(true);//抗锯齿
+		                        if (beaconsList != null) {
+		                            for (BeaconLocation beaconLocation : beaconsList) {
+		                            	System.out.println("minor: "+beaconLocation.getMinor());
+		                            	if (setBeaconLocationByG(beaconLocation) == false) {
+											continue;
+										}
+//										tmpx = 0.0f;
+//										tmpy = 0.0f;
+		                                tmpx = mapCenterP.x + (endP.x - startP.x);
+		                                tmpy = mapCenterP.y + (endP.y - startP.y);
+//										// 要将这一步分离出来，才不会出现NaN的问题，不知道为什么
+//										tmpx -= ((double) posBitmap.getWidth()) / 2.0f;
+//										tmpy -= ((double) posBitmap.getHeight()) / 2.0f;
+		                                tmpx = tmpx - mapBitmap.getWidth() * curRate / 2.0f + (float) beaconLocation.getPosX() * curRate;
+		                                tmpy = tmpy - mapBitmap.getHeight() * curRate / 2.0f + (float) beaconLocation.getPosY() * curRate;
+		                                int size = 100 + beaconLocation.getLevel();
+		                                if(size<=0 || size==1){
+		                                    size=2;
+		                                }
+		                                mCanvas.drawCircle(tmpx, tmpy, size, paint1);
+		                            }
+		                        }
+		                        
 							}
 						}
 //   					点击处在地图上的坐标	
@@ -321,6 +362,18 @@ public class DragZoomImageSurfaceView extends SurfaceView implements SurfaceHold
 	
 	}
 
+	private boolean setBeaconLocationByG(BeaconLocation beaconLocation){
+		int aMinor = beaconLocation.getMinor();
+		for (String minor : G.beaconsLocation.keySet()) {
+			if (Integer.valueOf(minor).intValue() == aMinor) {
+				beaconLocation.setPosX(G.beaconsLocation.get(minor).getPosX());
+				beaconLocation.setPosY(G.beaconsLocation.get(minor).getPosY());
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * ���������ֵ
 	 */

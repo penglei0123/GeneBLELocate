@@ -1,21 +1,16 @@
 package com.genepoint.geneblelocate;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.LineNumberReader;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.genepoint.appconfig.G;
 import com.genepoint.blelocate.BLELocateCallback;
 import com.genepoint.blelocate.BLELocateService;
+import com.genepoint.blelocate.BeaconLocation;
 import com.genepoint.blelocate.IndoorLocationError;
 import com.genepoint.blelocate.core.LocPoint;
-import com.genepoint.common.LogDebug;
 import com.genepoint.common.PointUtils;
-import com.genepoint.datapack.Building;
 import com.genepoint.datapack.DragZoomImageSurfaceView;
 import com.genepoint.datapack.FloorAdapter;
 import com.navinfo.nimapapi.building.Floor;
@@ -327,7 +322,7 @@ public class LocateActivity extends Activity implements OnClickListener {
 	}
 
 	private BLELocateCallback callback = new BLELocateCallback() {
-
+ 
 		@Override
 		public void onFail(IndoorLocationError arg0) {
 			Log.e(TAG, "定位失败:" + arg0.errorCode + arg0.getErrorMsg());
@@ -385,7 +380,7 @@ public class LocateActivity extends Activity implements OnClickListener {
 		}
 
 		@Override
-		public void onSuccess(LocPoint point) {
+		public void onSuccess(LocPoint point,ArrayList<BeaconLocation> list) {
 			if(isAnimation){
 			btnLocate.clearAnimation();
 			btnLocate.setImageDrawable(getResources().getDrawable(R.drawable.locating));			
@@ -417,7 +412,9 @@ public class LocateActivity extends Activity implements OnClickListener {
 					}else{
 						floorbtn.setText(point.Floor);
 					}					
-					mapSurfaceView.drawPosition(point.Xcor, point.Ycor);
+//					mapSurfaceView.drawPosition(point.Xcor, point.Ycor);
+					System.out.println(list.toString());
+					mapSurfaceView.drawPositonWithBeacons(point.Xcor, point.Ycor, list);
 				}
 			}
 				

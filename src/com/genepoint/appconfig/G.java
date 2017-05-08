@@ -1,6 +1,11 @@
 package com.genepoint.appconfig;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.genepoint.blelocate.BeaconLocation;
+
 import android.os.Environment;
 
 public class G {
@@ -49,4 +54,6 @@ public class G {
 		return path;
 	}
 
+	
+	public Map<String, BeaconLocation> beaconsLocation = new HashMap<String, BeaconLocation>();
 }
