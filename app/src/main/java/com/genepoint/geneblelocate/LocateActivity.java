@@ -295,7 +295,7 @@ public class LocateActivity extends Activity implements OnClickListener {
         mapView.getOverLayer().deleteMark(markPreLocationId);
         // 经纬度转墨卡托坐标
         GeoPoint tmpPoint1 = PointUtils.LonLat2Mercator(new PointUtils(x1, y1));
-        markPreLocation.setGeoPoint(tmpPoint);
+        markPreLocation.setGeoPoint(tmpPoint1);
         mapView.getOverLayer().addMark(markPreLocation);
 		mapView.refresh();
 	}
@@ -417,10 +417,12 @@ public class LocateActivity extends Activity implements OnClickListener {
 			Log.i(TAG, "定位结果：" + point.Floor + point.Xcor + "  " + point.Ycor);
 			rView.setText("定位结果：" +  String.format("%.6f", point.Xcor)+ "," +  String.format("%.6f", point.Ycor));
 			if(mapType==0){
-			drawPointInMap(point.Floor, point.Xcor, point.Ycor,point1.Xcor,point1.Ycor);
-			surVIewFlag=false;
+                bleLocateService.setDirectionOptimizationEnable(true,true);
+			    drawPointInMap(point.Floor, point.Xcor, point.Ycor,point1.Xcor,point1.Ycor);
+			    surVIewFlag=false;
 			}
 			if(mapType==1){
+                bleLocateService.setDirectionOptimizationEnable(true,false);
 				mapView.cleanScene();
 				mapView.setVisibility(View.GONE);
 				if(!surVIewFlag){				
