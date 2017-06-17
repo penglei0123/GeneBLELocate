@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <com.navinfo.nimapapi.map.MapView
+            android:id="@+id/mapview_indoor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#E1E6F6" />
+
+        <com.genepoint.datapack.DragZoomImageSurfaceView
+            android:id="@+id/sfv_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:scaleType="matrix" />
+
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="蓝牙定位演示程序，禁止商用！——中科劲点"
+            android:textSize="10sp" />
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/showfloorbtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/popup_bg"
+        android:text="F1"
+        android:textColor="#ff0000" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/showfloorbtn"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/floorlist"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:alpha="50" >
+        </ListView>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/gp_logo" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/location"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:src="@drawable/location" />
+    </LinearLayout>
+
+</RelativeLayout>

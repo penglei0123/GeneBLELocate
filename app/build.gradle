@@ -1,0 +1,28 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "25.0.3"
+
+    defaultConfig {
+        applicationId "com.genepoint.geneblelocate"
+        minSdkVersion 18
+        targetSdkVersion 21
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:21.0.3'
+    compile files('libs/apache-ant-zip.jar')
+    // compile files('libs/ble-locate-sdk-2.1.jar')
+    compile files('libs/bugly_crash_release.jar')
+    compile files('libs/NIMap2D.jar')
+    compile files('libs/ble-locate-sdk-2.2.jar')
+}
