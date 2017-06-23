@@ -228,7 +228,7 @@ public class BLELocateCore {
                 }
                  //聚类计算优化
                  LogDebug.w(TAG,"聚类："+dis(resultLoc,lastPos)+"--"+calcDisPerSecByCluster(stepList));
-                 if(dis(resultLoc,lastPos)>2*calcDisPerSecByCluster(stepList)){
+                 if(dis(resultLoc,lastPos)>1.5*calcDisPerSecByCluster(stepList)){
 
                      resultLoc.Xcor = lastPos.Xcor + (resultLoc.Xcor-lastPos.Xcor)*0.8;
                      resultLoc.Ycor = lastPos.Ycor + (resultLoc.Ycor - lastPos.Ycor)*0.8;
@@ -321,7 +321,7 @@ public class BLELocateCore {
             double vectorQuad =  180 * theta / Math.PI;
             double rotQuad = GPSensorManager.getOrientation() ;
             LogDebug.w(TAG,"vectorQuad:"+vectorQuad+"/ rotQuad:"+rotQuad);
-            if (Math.abs(vectorQuad- rotQuad)>90) {
+            if (Math.abs(vectorQuad- rotQuad)>45) {
                 resultLoc = new LocPoint();
                 resultLoc.building=originalPoint.building;
                 resultLoc.Floor = originalPoint.Floor;
